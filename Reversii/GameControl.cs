@@ -16,7 +16,7 @@ namespace Reversii
         Button BtnReset;
         Label LblRedCount;
         Label LblBlueCount;
-        Label LblCurrentTurn;
+        Label LblStatus;
         public bool HelpEnabled;
         public GameControl()
         {
@@ -38,30 +38,37 @@ namespace Reversii
             BtnReset.Click += Restart;
             Controls.Add(BtnReset);
 
-            LblCurrentTurn = new Label();
-            LblCurrentTurn.Text = "Turn: Red";
-            LblCurrentTurn.ForeColor = Color.Red;
-            LblCurrentTurn.Location = new Point(100, 20);
-            Controls.Add(LblCurrentTurn);
+            LblStatus = new Label();
+            LblStatus.Text = "Turn: Red";
+            LblStatus.ForeColor = Color.Red;
+            LblStatus.Location = new Point(100, 25);
+            Controls.Add(LblStatus);
 
             LblRedCount = new Label();
             LblRedCount.Text = "Red tiles: 2";
-            LblRedCount.Location = new Point(300, 20);
+            LblRedCount.Location = new Point(300, 25);
             Controls.Add(LblRedCount);
 
             LblBlueCount = new Label();
             LblBlueCount.Text = "Blue tiles: 2";
-            LblBlueCount.Location = new Point(400, 20);
+            LblBlueCount.Location = new Point(400, 25);
             Controls.Add(LblBlueCount);
 
             HelpEnabled = true;
 
         }
+        /// <summary>
+        /// Schakelt tussen hulptekeningetjes of niet
+        /// </summary>
         private void ShowHelp(object o, EventArgs ea)
         {
             HelpEnabled = !HelpEnabled;
             MainGrid.Refresh();
         }
+        /// <summary>
+        /// Reset het spel
+        /// </summary>
+
         private void Restart(object o, EventArgs ea)
         {
             HelpEnabled = true;
@@ -71,12 +78,29 @@ namespace Reversii
             Controls.Add(MainGrid);
             UpdateLabels();
         }
+        /// <summary>
+        /// Past de labels aan aan de nieuwe situatie
+        /// </summary>
         public void UpdateLabels()
         {
             LblRedCount.Text = "Red tiles: " + MainGrid.RedCount;
             LblBlueCount.Text = "Blue tiles: " + MainGrid.BlueCount;
-            LblCurrentTurn.Text = (MainGrid.RedsTurn) ? "Turn: Red" : "Turn: Blue";
-            LblCurrentTurn.ForeColor = (MainGrid.RedsTurn) ? Color.Red : Color.Blue;
+            if(MainGrid.TurnsAvailable)
+            {
+                LblStatus.Text = (MainGrid.RedsTurn) ? "Turn: Red" : "Turn: Blue";
+                LblStatus.ForeColor = (MainGrid.RedsTurn) ? Color.Red : Color.Blue;
+            }
+            else if(MainGrid.RedCount == MainGrid.BlueCount)
+            {
+                LblStatus.Text = "Draw!";
+                LblStatus.ForeColor = Color.Green;
+            }
+            else
+            {
+                LblStatus.Text = (MainGrid.RedCount > MainGrid.BlueCount) ? "Red won!" : "Blue won!";
+                LblStatus.ForeColor = (MainGrid.RedCount > MainGrid.BlueCount) ? Color.Red : Color.Blue;
+            }
+
         }
     }
 }

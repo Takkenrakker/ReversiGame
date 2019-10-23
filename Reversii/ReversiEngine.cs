@@ -11,34 +11,44 @@ namespace Reversii
     {
         private string gameStatus;
         public int[,] GridContent;
-        private const int gridSizeX = 10;
-        private const int gridSizeY = 10;
+        private const int gridSizeX = 6;
+        private const int gridSizeY = 6;
         private GameControl ParentControl;
         private int currentTurn;
+        private bool turnsAvailable;
         private int redCount;
         private int blueCount;
         public ReversiEngine(GameControl o)
         {
             GridContent = new int[gridSizeX, gridSizeY];
-            GridContent[2, 2] = 1; GridContent[3, 3] = 1;
-            GridContent[3, 2] = 2; GridContent[2, 3] = 2;
+
+            //Plaats steentjes in het midden, ongeacht grid grootte
+            GridContent[gridSizeX/2-1, gridSizeY/2-1] = 1; GridContent[gridSizeX/2, gridSizeY/2] = 1;
+            GridContent[gridSizeX/2, gridSizeY/2-1] = 2; GridContent[gridSizeX/2-1, gridSizeY/2] = 2;
+
             currentTurn = 1;
             gameStatus = "";
             redCount = 2;
             blueCount = 2;
             ParentControl = o;
+            turnsAvailable = true;
         }
 
+        /// <summary>
+        /// Plaats steentje en verander beurt. In de CheckLegality methode worden de juiste aanliggende steentjes ook omgedraait.
+        /// </summary>
         public void UpdateField(int tileX, int tileY)
         {
             if (CheckLegality(tileX, tileY, true))
             {
                 GridContent[tileX, tileY] = currentTurn;
                 currentTurn = (currentTurn == 1) ? 2 : 1;
-                Debug.WriteLine("currentTurn:" +currentTurn);
             }
         }
 
+        /// <summary>
+        /// Turf de hoeveelheid steentjes van elke kleur.
+        /// </summary>
         public void UpdateCount()
         {
             redCount = 0;
@@ -59,7 +69,10 @@ namespace Reversii
                 }
             }
         }
-
+        
+        /// <summary>
+        /// Controleert of de gegeven tile wel legaal is om iets in te plaatsen. Als fill true is, dan wordt na het plaatsen van de steen ook de juiste aanliggende steentjes omgedraait.
+        /// </summary>
         public bool CheckLegality(int tileX, int tileY, bool fill)
         {
             bool legal = false;
@@ -84,6 +97,7 @@ namespace Reversii
                             if (GridContent[r, c] == currentTurn)
                             {
                                 legal = true;
+                                turnsAvailable = true;
                                 if(fill)
                                 {
                                     while(i>=0)
@@ -125,13 +139,6 @@ namespace Reversii
                 return (currentTurn == 1) ? true:false;
             }
         }
-        public string GameStatus
-        {
-            get
-            {
-                return gameStatus;
-            }
-        }
 
         public int GridSizeX
         {
@@ -145,6 +152,17 @@ namespace Reversii
             get
             {
                 return gridSizeY;
+            }
+        }
+        public bool TurnsAvailable
+        {
+            get
+            {
+                return turnsAvailable;
+            }
+            set
+            {
+                turnsAvailable = value;
             }
         }
     }

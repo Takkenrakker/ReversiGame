@@ -37,7 +37,7 @@ namespace Reversii
             this.ClientSize = new System.Drawing.Size(586, 711);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Reversii";
-            this.Text = "Form1";
+            this.Text = "Reversi!";
             this.ResumeLayout(false);
 
         }
