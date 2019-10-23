@@ -25,7 +25,7 @@ namespace Reversii
         }
         public void Clicked(object o, MouseEventArgs mea)
         {
-            Point tileClicked = new Point((int)(((float)mea.X / Size.Width) * 6), (int)(((float)mea.Y / Size.Height) * 6));
+            Point tileClicked = new Point((int)(((float)mea.X / Size.Width) * MainEngine.GridSizeX), (int)(((float)mea.Y / Size.Height) * MainEngine.GridSizeY));
             MainEngine.UpdateField(tileClicked.X, tileClicked.Y);
             MainEngine.UpdateCount();
             Debug.WriteLine("" + tileClicked);
@@ -35,26 +35,28 @@ namespace Reversii
         public void Draw(object o, PaintEventArgs e)
         {
             Graphics gr = e.Graphics;
-            for(float i = 0; i < 7; i++)
+            int gridSizeX = MainEngine.GridSizeX;
+            int gridSizeY = MainEngine.GridSizeY;
+            for (float i = 0; i < gridSizeX + 1; i++)
             {
-                int pos = (int)((i / 6) * (Size.Width - 1));
+                int pos = (int)((i / gridSizeX) * (Size.Width - 1));
                 gr.DrawLine(Pens.Black, pos, 0, pos, Size.Height);
             }
-            for(float i = 0; i < 7; i++)
+            for(float i = 0; i < gridSizeY + 1; i++)
             {
-                int pos = (int)((i / 6) * (Size.Height - 1));
+                int pos = (int)((i / gridSizeY) * (Size.Height - 1));
                 gr.DrawLine(Pens.Black, 0, pos, Size.Width, pos);
             }
-            for(float x = 0; x < 6; x++)
+            for(float x = 0; x < gridSizeX; x++)
             {
-                for(float y = 0; y < 6; y++)
+                for(float y = 0; y < gridSizeY; y++)
                 {
                     if (MainEngine.GridContent[(int)x, (int)y] == 1)
-                        gr.FillEllipse(Brushes.Red, (x / 6) * Size.Width, (y / 6) * Size.Height, (Size.Width / 6) - 1, (Size.Height / 6) - 1);
+                        gr.FillEllipse(Brushes.Red, (x / gridSizeX) * Size.Width, (y / gridSizeY) * Size.Height, (Size.Width / gridSizeX) - 1, (Size.Height / gridSizeY) - 1);
                     else if (MainEngine.GridContent[(int)x, (int)y] == 2)
-                        gr.FillEllipse(Brushes.Blue, (x / 6) * Size.Width, (y / 6) * Size.Height, (Size.Width / 6) - 1, (Size.Height / 6) - 1);
+                        gr.FillEllipse(Brushes.Blue, (x / gridSizeX) * Size.Width, (y / gridSizeY) * Size.Height, (Size.Width / gridSizeX) - 1, (Size.Height / gridSizeY) - 1);
                     else if (MainEngine.CheckLegality((int)x, (int)y, false) && ParentControl.HelpEnabled)
-                        gr.DrawEllipse(Pens.Black, (x / 6) * Size.Width, (y / 6) * Size.Height, (Size.Width / 6) - 1, (Size.Height / 6) - 1);
+                        gr.DrawEllipse(Pens.Black, (x / gridSizeX) * Size.Width, (y / gridSizeY) * Size.Height, (Size.Width / gridSizeX) - 1, (Size.Height / gridSizeY) - 1);
                 }
             }
         }
