@@ -13,19 +13,23 @@ namespace Reversii
     public class GameGrid : UserControl
     {
         ReversiEngine MainEngine;
-        public GameGrid()
+        GameControl ParentControl;
+        public GameGrid(GameControl o)
         {
             BackColor = Color.LightGray;
             Paint += Draw;
             MouseUp += Clicked;
             Size = new Size(500, 500);
-            MainEngine = new ReversiEngine();
+            MainEngine = new ReversiEngine(o);
+            ParentControl = o;
         }
         public void Clicked(object o, MouseEventArgs mea)
         {
             Point tileClicked = new Point((int)(((float)mea.X / Size.Width) * 6), (int)(((float)mea.Y / Size.Height) * 6));
             MainEngine.UpdateField(tileClicked.X, tileClicked.Y);
+            MainEngine.UpdateCount();
             Debug.WriteLine("" + tileClicked);
+            ParentControl.UpdateLabels();
             Refresh();
         }
         public void Draw(object o, PaintEventArgs e)
@@ -49,9 +53,35 @@ namespace Reversii
                         gr.FillEllipse(Brushes.Red, (x / 6) * Size.Width, (y / 6) * Size.Height, (Size.Width / 6) - 1, (Size.Height / 6) - 1);
                     else if (MainEngine.GridContent[(int)x, (int)y] == 2)
                         gr.FillEllipse(Brushes.Blue, (x / 6) * Size.Width, (y / 6) * Size.Height, (Size.Width / 6) - 1, (Size.Height / 6) - 1);
-                    else if (MainEngine.CheckLegality((int)x, (int)y, false))
+                    else if (MainEngine.CheckLegality((int)x, (int)y, false) && ParentControl.HelpEnabled)
                         gr.DrawEllipse(Pens.Black, (x / 6) * Size.Width, (y / 6) * Size.Height, (Size.Width / 6) - 1, (Size.Height / 6) - 1);
                 }
+            }
+        }
+        public void Reset()
+        {
+//            MainEngine.Reset();
+        }
+        public int RedCount
+        {
+            get
+            {
+                return MainEngine.RedCount;
+            }
+        }
+        public int BlueCount
+        {
+            get
+            {
+                return MainEngine.BlueCount;
+            }
+        }
+
+        public bool RedsTurn
+        {
+            get
+            {
+                return MainEngine.CurrentTurn;
             }
         }
     }

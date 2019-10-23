@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="ReversiEngine.cs" />
     <Compile Include="Reversii.cs">
       <SubType>Form</SubType>

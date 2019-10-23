@@ -16,12 +16,20 @@ namespace Reversii
 {
     public partial class Reversii : Form
     {
+        GameControl MainControl;
         public Reversii()
         {
-            GameGrid mainGrid = new GameGrid();
-            mainGrid.Location = new Point(50, 50); mainGrid.Size = new Size(500, 500);
-            Controls.Add(mainGrid);
+            GameControl MainControl = new GameControl();
+            MainControl.Location = new Point(50, 50); MainControl.Size = new Size(500, 600);
+            Controls.Add(MainControl);
+
+
             InitializeComponent();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            MainControl = new GameControl();
         }
     }
 }
